@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="reveal.js/css/reveal.min.css"/>
+  <link rel="stylesheet" href="reveal.js/css/theme/custom.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css"/>
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+    <!--[if lt IE 9]>
+    <script src="reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section><section id="fabric-un-outil-pour-déployer-ses-projetsthomas-gratier" class="titleslide slide level1"><h1><img src="images/logo_fabric.png" style="float: left;">Fabric, un outil pour déployer ses projets<br/><small style="color:#ffcc39;">Thomas Gratier</small></h1></section></section>
+<section><section id="des-manières-de-déployer" class="titleslide slide level1"><h1>Des manières de déployer</h1></section><section id="a-la-mano" class="slide level2">
+<h1>A la mano</h1>
+<ul>
+<li>Répétitif</li>
+<li>Risqué</li>
+<li>Source d'erreurs</li>
+<li>Non traçable</li>
+</ul>
+</section><section id="approche-fichiers" class="slide level2">
+<h1> Approche fichiers</h1>
+<ul>
+<li>FTP / SCP / Rsync</li>
+<li>Gestionnaires de version + hooks</li>
+</ul>
+</section><section id="approche-services" class="slide level2">
+<h1>Approche services</h1>
+<ul>
+<li>Services online de déploiement</li>
+<li>PaaS</li>
+<li>Intégration continue</li>
+</ul>
+<aside class="notes">
+
+</aside>
+</section><section id="approche-deploy-as-code" class="slide level2">
+<h1> Approche &quot;deploy as code&quot;</h1>
+<ul>
+<li>Déploiement SSH via ligne de commande</li>
+<li>Logiciels de déploiement automatique, centralisés ou non.</li>
+</ul>
+</section></section>
+<section><section id="et-fabric-dans-tout-ça" class="titleslide slide level1"><h1> Et Fabric dans tout ça?</h1></section><section id="de-lusage" class="slide level2">
+<h1>De l'usage</h1>
+<ul>
+<li>Simple développeur avec quelques connaissances Sysadmin</li>
+<li>Besoin de versionner</li>
+<li>Besoin d'automatiser</li>
+<li>Temps limité pour monter en compétences</li>
+<li>Basé sur Python et connaissance de Python</li>
+</ul>
+</section><section id="un-choix-par-opposition" class="slide level2">
+<h1> Un choix par opposition</h1>
+<ul>
+<li>Ne pas dépendre de services tiers</li>
+<li>Ne pas apprendre de DSL</li>
+<li>Bash puissant mais pas &quot;cross platform&quot;, de plus bas niveau que Python</li>
+</ul>
+</section></section>
+<section><section id="enfin-un-peu-de-technique" class="titleslide slide level1"><h1> Enfin un peu de technique</h1></section><section id="installation" class="slide level2">
+<h1> Installation</h1>
+<ul>
+<li>Installer Python 2.x, setuptools</li>
+<li>Dépendances Paramiko et PyCrypto (pour SSH)</li>
+<li><p>Lancer</p>
+<pre><code>pip install fabric</code></pre></li>
+</ul>
+</section><section id="jouer" class="slide level2">
+<h1> Jouer</h1>
+<ul>
+<li>Créer un fichier fabfile.py</li>
+<li><p>Insérer le contenu ci-dessous</p>
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from fabric.api import *
+
+# Utilisateur pour la connexion distante
+
+env.user = &#39;utilisateurapplication&#39;
+
+# Urls des serveurs de déploiement
+
+env.hosts = [&#39;server1.exemple.com&#39;, &#39;server2.exemple.com&#39;]
+
+def deploy():
+    ...</code></pre></li>
+<li><p>Exécuter avec</p>
+<pre><code>fab server1.exemple.com</code></pre></li>
+</ul>
+</section></section>
+<section><section id="un-aperçu-plus-complet" class="titleslide slide level1"><h1>Un aperçu plus complet</h1></section><section id="les-commandes-de-base" class="slide level2">
+<h1> Les commandes de base</h1>
+<ul>
+<li>Exécuter des commandes locales (<strong>local</strong>)</li>
+<li>Exécuter des commandes distantes (<strong>run</strong> et <strong>sudo</strong>)</li>
+<li>Envoyer ou récupérer des fichiers distants (<strong>get</strong>, <strong>put</strong>)</li>
+<li>Gérer des environnements, comme la gestion des chemins système (<strong>context_managers</strong>)</li>
+</ul>
+</section><section id="les-contributions" class="slide level2">
+<h1> Les contributions</h1>
+<ul>
+<li>Manipuler des fichiers (<strong>append</strong>, <strong>exists</strong>, <strong>contains</strong>, <strong>sed</strong>, <strong>comment</strong>)</li>
+<li>Gérer Rsync, envoyer un projet, utiliser des templates</li>
+</ul>
+</section></section>
+<section><section id="passer-au-niveau-supérieur" class="titleslide slide level1"><h1>Passer au niveau supérieur</h1></section><section id="fabtools-le-facilitateur" class="slide level2">
+<h1> Fabtools, le facilitateur</h1>
+<p>Un outil fournissant des helpers de plus haut niveau pour Fabric.</p>
+<p>Installer avec</p>
+<pre><code>pip install fabtools</code></pre>
+<p>Dans le fabfile.py</p>
+<pre><code>from fabric.api import *
+from fabtools import require
+import fabtools
+
+deploy():
+    require.deb.packages([
+        &#39;imagemagick&#39;,
+        &#39;libxml2-dev&#39;,
+    ])</code></pre>
+</section><section id="gérer-les-logiciels-de-los-et-le-versionning" class="slide level2">
+<h1> Gérer les logiciels de l'OS et le versionning</h1>
+<ul>
+<li>Installation de paquets (<strong>require.deb</strong>, <strong>require.rpm</strong>)</li>
+<li>Installation de serveur et configuration (<strong>require.apache</strong>, <strong>require.nginx</strong>, <strong>require.tomcat</strong>)</li>
+<li>Bases de données (<strong>fabtools.mysql</strong>, <strong>fabtools.postgres</strong>)</li>
+<li>Versionning (<strong>fabtools.git</strong>, <strong>fabtools.mercurial</strong>)</li>
+</ul>
+</section><section id="gérer-des-éléments-système" class="slide level2">
+<h1> Gérer des éléments système</h1>
+<ul>
+<li>Services et processus (<strong>fabtools.service</strong>, <strong>fabtools.systemd</strong>, <strong>fabtools.cron</strong>)</li>
+<li>Groupes et utilisateurs (<strong>fabtools.group</strong>, <strong>fabtools.user</strong>)</li>
+<li>Informations réseaux (<strong>fabtools.network</strong>)</li>
+<li>Vagrant (<strong>fabtools.vagrant</strong>)</li>
+</ul>
+</section></section>
+<section><section id="allez-plus-loin" class="titleslide slide level1"><h1>Allez plus loin</h1></section><section id="sites-officiels" class="slide level2">
+<h1> Sites officiels</h1>
+<ul>
+<li><p>Site de Fabric <a href="http://www.fabfile.org">http://www.fabfile.org</a></p></li>
+<li><p>Site de Fabtools <a href="http://fabtools.readthedocs.org">http://fabtools.readthedocs.org</a></p></li>
+</ul>
+</section><section id="bonus" class="slide level2">
+<h1> Bonus</h1>
+<ul>
+<li>Article de Chris Coyier sur un éventail des solutions pour le déploiement <a href="http://css-tricks.com/deployment/">http://css-tricks.com/deployment/</a></li>
+<li>Présentation de Ronan Amicel, le développeur principal de Fabtools <a href="http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools">http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools</a></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+    </body>
+</html>
