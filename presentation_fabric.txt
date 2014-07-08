@@ -6,19 +6,24 @@
 
 -   Répétitif
 -   Risqué
--   Source d'erreurs
 -   Non traçable
+
+![](images/error.jpg)
 
 ## Approche fichiers
 
 -   FTP / SCP / Rsync
 -   Gestionnaires de version + hooks
 
+![](images/tree_folder.png)
+
 ## Approche services
 
 -   Services online de déploiement
 -   PaaS
 -   Intégration continue
+
+![](images/data_center.jpg)
 
 <div class="notes">
 </div>
@@ -28,21 +33,25 @@
 -   Déploiement SSH via ligne de commande
 -   Logiciels de déploiement automatique, centralisés ou non.
 
+![](images/DevOpsDays.png)
+
 # Et Fabric dans tout ça?
 
 ## De l'usage
 
 -   Simple développeur avec quelques connaissances Sysadmin
 -   Besoin de versionner
--   Besoin d'automatiser
--   Temps limité pour monter en compétences
--   Basé sur Python et connaissance de Python
+-   Nécessité d'automatiser
+-   Montée en compétences en un temps limité
+-   Réutilisation de ses connaissances
 
 ## Un choix par opposition
 
 -   Ne pas dépendre de services tiers
 -   Ne pas apprendre de DSL
 -   Bash puissant mais pas "cross platform", de plus bas niveau que Python
+
+![](images/ying_yang.jpg)
 
 # Enfin un peu de technique
 
@@ -86,7 +95,8 @@
 -   Exécuter des commandes locales (**local**)
 -   Exécuter des commandes distantes (**run** et **sudo**)
 -   Envoyer ou récupérer des fichiers distants (**get**, **put**)
--   Gérer des environnements, comme la gestion des chemins système (**context_managers**)
+-   Gérer des environnements, comme la gestion des chemins système en distant (**context_managers**)
+
 
 ## Les contributions
 
@@ -115,18 +125,44 @@ Dans le fabfile.py
             'libxml2-dev',
         ])
 
-## Gérer les logiciels de l'OS et le versionning
+## Gérer les logiciels de l'OS et le versionning (1/2)
 
 -   Installation de paquets (**require.deb**, **require.rpm**)
--   Installation de serveur et configuration (**require.apache**, **require.nginx**, **require.tomcat**)
--   Bases de données (**fabtools.mysql**, **fabtools.postgres**)
--   Versionning (**fabtools.git**, **fabtools.mercurial**)
 
+        require.deb.packages([
+            'imagemagick',
+            'libxml2-dev',
+        ])
+        
+-   Installation de serveur et configuration (**require.apache**, **require.nginx**, **require.tomcat**, **require.nodejs**)
+
+        require.apache.server()
+        
+        fabtools.require.apache.site_enabled(config)
+
+## Gérer les logiciels de l'OS et le versionning (2/2)
+
+-   Bases de données (**fabtools.mysql**, **fabtools.postgres**)
+
+        require.postgres.server()
+        require.postgres.user('myuser', 's3cr3tp4ssw0rd')
+        require.postgres.database('myappsdb', 'myuser')
+        
+-   Versionning (**fabtools.git**, **fabtools.mercurial**)
+    
+        fabtools.require.git.working_copy(remote_url, path=None, branch='master', update=True, use_sudo=False, user=None)
 
 ## Gérer des éléments système
 
 -   Services et processus (**fabtools.service**, **fabtools.systemd**, **fabtools.cron**)
+
+        cron.add_task('cleanup', '@monthly', 'alice', '/home/alice/bin/cleanup.sh')
+    
 -   Groupes et utilisateurs (**fabtools.group**, **fabtools.user**)
+    
+        if not fabtools.user.exists('alice'):
+            fabtools.user.create('alice')
+
 -   Informations réseaux (**fabtools.network**)
 -   Vagrant (**fabtools.vagrant**)
 
@@ -144,3 +180,21 @@ Dans le fabfile.py
 
 * Article de Chris Coyier sur un éventail des solutions pour le déploiement <a href="http://css-tricks.com/deployment/">http://css-tricks.com/deployment/</a>
 * Présentation de Ronan Amicel, le développeur principal de Fabtools <a href="http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools">http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools</a>
+
+## Crédits photos
+
+
+-   [Error](https://www.flickr.com/photos/nickwebb/3016498475/) par Nick J Webb
+    [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)
+
+-   [Folder Tree](http://thenounproject.com/term/folder-tree/27307/) par Juan Pablo Bravo (via The Noun Project)
+    [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/us/)
+    
+-   [Data center](https://www.flickr.com/photos/small_realm/11189803153/) par BobMical
+    [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)
+
+-   [DevOps](http://rennesdevops.fr/wp-content/uploads/2013/04/DevOpsDays.png)
+
+-   [Ying Yang](https://www.flickr.com/photos/easyflow/3377137372/) par easyflow
+    [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)
+    

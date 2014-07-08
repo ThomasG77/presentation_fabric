@@ -36,15 +36,20 @@
 <ul>
 <li>Répétitif</li>
 <li>Risqué</li>
-<li>Source d'erreurs</li>
 <li>Non traçable</li>
 </ul>
+<figure>
+<img src="images/error.jpg" />
+</figure>
 </section><section id="approche-fichiers" class="slide level2">
 <h1> Approche fichiers</h1>
 <ul>
 <li>FTP / SCP / Rsync</li>
 <li>Gestionnaires de version + hooks</li>
 </ul>
+<figure>
+<img src="images/tree_folder.png" />
+</figure>
 </section><section id="approche-services" class="slide level2">
 <h1>Approche services</h1>
 <ul>
@@ -52,6 +57,9 @@
 <li>PaaS</li>
 <li>Intégration continue</li>
 </ul>
+<figure>
+<img src="images/data_center.jpg" />
+</figure>
 <aside class="notes">
 
 </aside>
@@ -61,15 +69,18 @@
 <li>Déploiement SSH via ligne de commande</li>
 <li>Logiciels de déploiement automatique, centralisés ou non.</li>
 </ul>
+<figure>
+<img src="images/DevOpsDays.png" />
+</figure>
 </section></section>
 <section><section id="et-fabric-dans-tout-ça" class="titleslide slide level1"><h1> Et Fabric dans tout ça?</h1></section><section id="de-lusage" class="slide level2">
 <h1>De l'usage</h1>
 <ul>
 <li>Simple développeur avec quelques connaissances Sysadmin</li>
 <li>Besoin de versionner</li>
-<li>Besoin d'automatiser</li>
-<li>Temps limité pour monter en compétences</li>
-<li>Basé sur Python et connaissance de Python</li>
+<li>Nécessité d'automatiser</li>
+<li>Montée en compétences en un temps limité</li>
+<li>Réutilisation de ses connaissances</li>
 </ul>
 </section><section id="un-choix-par-opposition" class="slide level2">
 <h1> Un choix par opposition</h1>
@@ -78,6 +89,9 @@
 <li>Ne pas apprendre de DSL</li>
 <li>Bash puissant mais pas &quot;cross platform&quot;, de plus bas niveau que Python</li>
 </ul>
+<figure>
+<img src="images/ying_yang.jpg" />
+</figure>
 </section></section>
 <section><section id="enfin-un-peu-de-technique" class="titleslide slide level1"><h1> Enfin un peu de technique</h1></section><section id="installation" class="slide level2">
 <h1> Installation</h1>
@@ -117,7 +131,7 @@ def deploy():
 <li>Exécuter des commandes locales (<strong>local</strong>)</li>
 <li>Exécuter des commandes distantes (<strong>run</strong> et <strong>sudo</strong>)</li>
 <li>Envoyer ou récupérer des fichiers distants (<strong>get</strong>, <strong>put</strong>)</li>
-<li>Gérer des environnements, comme la gestion des chemins système (<strong>context_managers</strong>)</li>
+<li>Gérer des environnements, comme la gestion des chemins système en distant (<strong>context_managers</strong>)</li>
 </ul>
 </section><section id="les-contributions" class="slide level2">
 <h1> Les contributions</h1>
@@ -141,21 +155,39 @@ deploy():
         &#39;imagemagick&#39;,
         &#39;libxml2-dev&#39;,
     ])</code></pre>
-</section><section id="gérer-les-logiciels-de-los-et-le-versionning" class="slide level2">
-<h1> Gérer les logiciels de l'OS et le versionning</h1>
+</section><section id="gérer-les-logiciels-de-los-et-le-versionning-12" class="slide level2">
+<h1> Gérer les logiciels de l'OS et le versionning (1/2)</h1>
 <ul>
-<li>Installation de paquets (<strong>require.deb</strong>, <strong>require.rpm</strong>)</li>
-<li>Installation de serveur et configuration (<strong>require.apache</strong>, <strong>require.nginx</strong>, <strong>require.tomcat</strong>)</li>
-<li>Bases de données (<strong>fabtools.mysql</strong>, <strong>fabtools.postgres</strong>)</li>
-<li>Versionning (<strong>fabtools.git</strong>, <strong>fabtools.mercurial</strong>)</li>
+<li><p>Installation de paquets (<strong>require.deb</strong>, <strong>require.rpm</strong>)</p>
+<pre><code>require.deb.packages([
+    &#39;imagemagick&#39;,
+    &#39;libxml2-dev&#39;,
+])</code></pre></li>
+<li><p>Installation de serveur et configuration (<strong>require.apache</strong>, <strong>require.nginx</strong>, <strong>require.tomcat</strong>, <strong>require.nodejs</strong>)</p>
+<pre><code>require.apache.server()
+
+fabtools.require.apache.site_enabled(config)</code></pre></li>
+</ul>
+</section><section id="gérer-les-logiciels-de-los-et-le-versionning-22" class="slide level2">
+<h1> Gérer les logiciels de l'OS et le versionning (2/2)</h1>
+<ul>
+<li><p>Bases de données (<strong>fabtools.mysql</strong>, <strong>fabtools.postgres</strong>)</p>
+<pre><code>require.postgres.server()
+require.postgres.user(&#39;myuser&#39;, &#39;s3cr3tp4ssw0rd&#39;)
+require.postgres.database(&#39;myappsdb&#39;, &#39;myuser&#39;)</code></pre></li>
+<li><p>Versionning (<strong>fabtools.git</strong>, <strong>fabtools.mercurial</strong>)</p>
+<pre><code>fabtools.require.git.working_copy(remote_url, path=None, branch=&#39;master&#39;, update=True, use_sudo=False, user=None)</code></pre></li>
 </ul>
 </section><section id="gérer-des-éléments-système" class="slide level2">
 <h1> Gérer des éléments système</h1>
 <ul>
-<li>Services et processus (<strong>fabtools.service</strong>, <strong>fabtools.systemd</strong>, <strong>fabtools.cron</strong>)</li>
-<li>Groupes et utilisateurs (<strong>fabtools.group</strong>, <strong>fabtools.user</strong>)</li>
+<li><p>Services et processus (<strong>fabtools.service</strong>, <strong>fabtools.systemd</strong>, <strong>fabtools.cron</strong>)</p>
+<pre><code>cron.add_task(&#39;cleanup&#39;, &#39;@monthly&#39;, &#39;alice&#39;, &#39;/home/alice/bin/cleanup.sh&#39;)</code></pre></li>
+<li><p>Groupes et utilisateurs (<strong>fabtools.group</strong>, <strong>fabtools.user</strong>)</p>
+<pre><code>if not fabtools.user.exists(&#39;alice&#39;):
+    fabtools.user.create(&#39;alice&#39;)</code></pre></li>
 <li>Informations réseaux (<strong>fabtools.network</strong>)</li>
-<li>Vagrant (<strong>fabtools.vagrant</strong>)</li>
+<li><p>Vagrant (<strong>fabtools.vagrant</strong>)</p></li>
 </ul>
 </section></section>
 <section><section id="allez-plus-loin" class="titleslide slide level1"><h1>Allez plus loin</h1></section><section id="sites-officiels" class="slide level2">
@@ -169,6 +201,15 @@ deploy():
 <ul>
 <li>Article de Chris Coyier sur un éventail des solutions pour le déploiement <a href="http://css-tricks.com/deployment/">http://css-tricks.com/deployment/</a></li>
 <li>Présentation de Ronan Amicel, le développeur principal de Fabtools <a href="http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools">http://fr.slideshare.net/ronan.amicel/je-configure-mes-serveurs-avec-fabric-et-fabtools</a></li>
+</ul>
+</section><section id="crédits-photos" class="slide level2">
+<h1>Crédits photos</h1>
+<ul>
+<li><p><a href="https://www.flickr.com/photos/nickwebb/3016498475/">Error</a> par Nick J Webb <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a></p></li>
+<li><p><a href="http://thenounproject.com/term/folder-tree/27307/">Folder Tree</a> par Juan Pablo Bravo (via The Noun Project) <a href="http://creativecommons.org/licenses/by/3.0/us/">CC BY 3.0</a></p></li>
+<li><p><a href="https://www.flickr.com/photos/small_realm/11189803153/">Data center</a> par BobMical <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a></p></li>
+<li><p><a href="http://rennesdevops.fr/wp-content/uploads/2013/04/DevOpsDays.png">DevOps</a></p></li>
+<li><p><a href="https://www.flickr.com/photos/easyflow/3377137372/">Ying Yang</a> par easyflow <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a></p></li>
 </ul>
 </section></section>
     </div>
