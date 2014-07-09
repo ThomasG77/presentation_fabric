@@ -6,7 +6,7 @@
 
 -   Répétitif
 -   Risqué
--   Non traçable
+-   Non traçablef
 
 ![](images/error.jpg)
 
@@ -86,7 +86,7 @@
 		
 -   Exécuter avec
 
-        fab server1.exemple.com
+        fab -H server1.exemple.com deploy
 
 # Un aperçu plus complet
 
